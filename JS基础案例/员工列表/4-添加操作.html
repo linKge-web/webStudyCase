@@ -80,12 +80,12 @@
       <div class="age_sort un">
       <a href="javascript:;">年龄从小到大</a>
       <a href="javascript:;">年龄从大到小</a>
-      <a href="javascript:;">默认排序</a>
+      <a href="javascript:;" class="active">默认排序</a>
       </div>
-      <div class="gender_show">
+      <div id="gender_show">
         <a href="javascript:;">只显示男性</a>
         <a href="javascript:;">只显示女性</a>
-        <a href="javascript:;">默认</a>
+        <a href="javascript:;" class="active">默认</a>
       </div>
     </div>
    
@@ -147,8 +147,8 @@
 
     {
       //这边按钮标识变量
-      let sortState = 1;// 0 年龄从小到大  1 年龄从大到小  2 默认排序
-      let genderState = 1; // 0 男性  1 女性  2 默认 
+      let sortState = 2;// 0 年龄从小到大  1 年龄从大到小  2 默认排序
+      let genderState = 2; // 0 男性  1 女性  2 默认 
       
       let tbody = document.getElementById('tbody');
       
@@ -167,11 +167,12 @@
 
       //根据数据渲染试图方法
       let render = () => {
-        console.log(data);
+        // console.log(data);
         //根据性别过滤数据
         let newData = data.filter(filterFn[genderState]);
         //排序
         newData = newData.sort(sortFn[sortState]);
+
         // console.log(newData);
         tbody.innerHTML = newData.map(item => `
           <tr>
@@ -185,7 +186,37 @@
       }
       render();
 
+      //添加操作
+      let gender_show = document.getElementById('gender_show');
+      let gender_show_a = Array.from(gender_show.getElementsByTagName('a'));
+      gender_show_a.forEach((item,index) => {
+        // console.log(item,index);
+        item.onclick = () => {
+          gender_show_a.forEach((item) => {
+            item.classList.remove('active');
+          })
+          item.classList.add('active');
+          //更改性别选择状态
+          genderState = index;
+          //执行渲染数据的方法
+          render();
+        }
+      });
 
+      let age_sort = document.querySelectorAll('.age_sort a');
+      age_sort.forEach((item,index) => {
+        item.onclick = () => {
+          // console.log(item);  //拿到点击的这一项
+          //清楚所有的然后添加当前点击的
+          age_sort.forEach(item => {
+            item.classList.remove('active');
+          });
+          item.classList.add('active');
+          // console.log(index);
+          sortState  = index;
+          render();
+        }
+      })
     }
   </script>
 </body>
