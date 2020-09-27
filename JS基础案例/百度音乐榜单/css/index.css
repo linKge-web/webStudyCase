@@ -1,0 +1,40 @@
+* {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+#wrap {
+  margin: 30px auto;
+  width: 482px;
+  border: 1px solid #000;
+  position: relative;
+  padding: 5px;
+  background: #eee;
+}
+.title {
+  font: bold 18px/40px "宋体";
+  text-align: center;
+  border-bottom: 1px solid #000;
+}
+.list {
+  padding-left: 2px;
+}
+.list li {
+  border-bottom: 1px solid #000;
+  font: 14px/36px "宋体";
+  /* 设置 元素的不透明级别 */
+  opacity: 0.8;
+}
+.list li:hover {
+  opacity: 1.2;
+}
+#list label input {
+  margin: 0 20px 0 30px ;
+}
+.footer {
+  font: 16px/36px "宋体";
+}
+input[type="chekbox"] {
+  width: 20px;
+  height: 20px;
+}
