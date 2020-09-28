@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>百度音乐榜单</title>
+  <link rel="stylesheet" href="./css/index.css">
+</head>
+<body>
+
+  <section id="wrap">
+    <h2 class="title">百度音乐榜单</h2>
+    <ul class="list">
+      <!-- 添加check属性就会设置为默认选中 -->
+      <!-- <li>
+        <input type="checkbox">  
+        <span>第一条信息</span>
+        <a href="javascript:;" class="collect">取消收藏</a>
+        <a href="javascript:;" class="centlCollect">收藏</a>
+        <a href="javascript:;" class="remove">删除</a>
+      </li> -->
+    </ul>
+    <footer>
+      <label>
+        <input type="checkbox" class="checkAll"/>
+        全选/全不选
+      </label>
+      <a href="javascript:;" id="remove">删除</a>
+      <input type="text" id="newInfo"/>
+      <a href="javascript:;" id="add">添加</a>
+    </footer>
+
+  </section>
+  <script>
+    let data = [
+      {
+        id: 0,
+        txt: "残酷月光 - 费启鸣",
+        checked: false
+      },
+      {
+        id: 1,
+        txt: "兄弟 - 艾热",
+        checked: true
+      }
+    ];
+    {
+      let list = document.querySelector('.list');
+      let checkAll = document.querySelector('.checkAll');
+
+      // 根据数据渲染视图
+      let render = () => {
+        list.innerHTML = data.map(item => {
+          return `
+          <li data-id=${item.id}>
+            <input type="checkbox" ${item.checked ? "checked":""}/>
+            <span>${item.txt}</span>
+            <a href="javascript:;" class="collect">收藏</a>
+            <a href="javascript:;" class="cancelCollect">取消收藏</a>
+            <a href="javascript:;" class="remove">删除</a>
+          </li> 
+          `
+        }).join("");
+        //如果全选了 全选按钮也勾上
+        checkAll.checked = data.every(item => item.checked);
+        // every 每一项都返回 true  every 才会返回true 有一项返回false，every 就返回 false
+      };
+      render();
+
+      // 数据操作的方法
+      // 添加一条数据
+      let addData = (txt) => {
+        data.push({
+          id: Date.now(), //用时间戳作为id，不会重复
+          txt,
+          checked: false
+        })
+        render();
+      };
+
+      let newInfo = document.querySelector('#newInfo');
+      let addBtn = document.querySelector('#add');
+      //点击就获取input中的TXT,并添加
+      addBtn.onclick = () => {
+        if(newInfo.value) {
+          addData(newInfo.value);
+        }
+        // console.log(newInfo.value);
+        
+      }
+      //修改选中状态的方法
+      let changeChecked = (id,checked) => {
+        data.forEach(item => {
+          if(item.id == id) {
+            item.checked = checked;
+          }
+        })
+        render();
+      }
+      //事件委托  利用事件冒泡把事件放在父祖上进行处理
+      list.onchange = ({target}) => {  //勾选是就会触犯事件
+        // let {target} = e;
+        // console.log(target);  // <input type=​"checkbox">​
+        let li = target.parentNode;
+        // console.log(target,li);  //Event 事件对象
+        changeChecked(li.dataset.id,target.checked);
+      }
+
+      //删除单项
+      let remove = (id) => {
+        //除了不等于id的都再次赋值给data
+        data = data.filter(item => item.id != id);  //只能是!= ,不能死!==
+        // console.log('该对象被删除了');
+        render();
+      }
+      list.onclick = ({target}) => {
+        // console.log(target); // <a href=​"javascript:​;​" class=​"remove">​删除​</a>​
+        if(target.className == 'remove') {
+          // console.log('该对象被删除了');
+          // console.log(target.parentNode.dataset.id);
+          remove(target.parentNode.dataset.id);
+        }
+      }
+
+      // 全选/全部选
+      let checkedAll = (checked) => {
+        data.forEach((item) => {
+          item.checked = checked;
+        })
+        render();
+      }
+      checkAll.onchange = () => {
+        checkedAll(checkAll.checked);  //勾上之后checkedJ就会变成true
+      }
+    }
+
+
+
+  </script>
+</body>
+</html>
